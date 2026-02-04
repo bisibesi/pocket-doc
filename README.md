@@ -1,4 +1,4 @@
-# 🛡️ DBMS-to-Document
+﻿# 🛡️ pocket-doc
 
 > **Security-First Database Schema Documentation Generator**
 
@@ -27,8 +27,8 @@ Generate comprehensive, readable documentation from your database schema **witho
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/dbms-to-document.git
-cd dbms-to-document
+git clone https://github.com/yourusername/pocket-doc.git
+cd pocket-doc
 
 # Build
 go build -o dbms-to-doc ./cmd/dbms-to-doc
@@ -116,7 +116,7 @@ See [`config.example.yaml`](config.example.yaml) for all options.
 ### Package Structure
 
 ```
-dbms-to-document/
+pocket-doc/
 ├── cmd/dbms-to-doc/        # CLI application
 ├── internal/
 │   ├── model/              # Schema data models
@@ -257,8 +257,8 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 ## 📞 Support
 
-- **Issues:** [GitHub Issues](https://github.com/yourusername/dbms-to-document/issues)
-- **Discussions:** [GitHub Discussions](https://github.com/yourusername/dbms-to-document/discussions)
+- **Issues:** [GitHub Issues](https://github.com/yourusername/pocket-doc/issues)
+- **Discussions:** [GitHub Discussions](https://github.com/yourusername/pocket-doc/discussions)
 
 ---
 

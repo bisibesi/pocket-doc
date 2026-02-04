@@ -1,8 +1,8 @@
-package ui
+﻿package ui
 
 import (
-	"dbms-to-document/internal/exporter"
-	"dbms-to-document/internal/model"
+	"pocket-doc/internal/exporter"
+	"pocket-doc/internal/model"
 	"embed"
 	"fmt"
 	"html/template"

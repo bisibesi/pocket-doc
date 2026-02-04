@@ -1,7 +1,7 @@
-package exporter
+﻿package exporter
 
 import (
-	"dbms-to-document/internal/model"
+	"pocket-doc/internal/model"
 	"os"
 	"path/filepath"
 	"testing"

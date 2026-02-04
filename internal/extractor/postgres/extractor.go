@@ -1,9 +1,9 @@
-package postgres
+﻿package postgres
 
 import (
 	"context"
 	"database/sql"
-	"dbms-to-document/internal/model"
+	"pocket-doc/internal/model"
 	"fmt"
 	"strings"
 	"time"

@@ -1,7 +1,7 @@
-package xlsx
+﻿package xlsx
 
 import (
-	"dbms-to-document/internal/model"
+	"pocket-doc/internal/model"
 	"fmt"
 	"io"
 	"time"

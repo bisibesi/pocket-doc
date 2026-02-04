@@ -1,8 +1,8 @@
-package extractor
+﻿package extractor
 
 import (
 	"context"
-	"dbms-to-document/internal/model"
+	"pocket-doc/internal/model"
 )
 
 // Extractor defines the interface for extracting database metadata

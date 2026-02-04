@@ -1,7 +1,7 @@
-package html
+﻿package html
 
 import (
-	"dbms-to-document/internal/model"
+	"pocket-doc/internal/model"
 	"html/template"
 	"io"
 )
@@ -389,7 +389,7 @@ const htmlTemplate = `<!DOCTYPE html>
         <hr style="margin: 40px 0; border: none; border-top: 2px solid #ecf0f1;">
         <p style="text-align: center; color: #95a5a6; font-size: 12px;">
             생성 시간: {{.ExtractedAt.Format "2006-01-02 15:04:05"}} | 
-            DBMS-to-Document Tool
+            pocket-doc Tool
         </p>
     </div>
 </body>

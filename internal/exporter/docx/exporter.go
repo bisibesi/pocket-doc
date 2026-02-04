@@ -1,8 +1,8 @@
-package docx
+﻿package docx
 
 import (
 	"archive/zip"
-	"dbms-to-document/internal/model"
+	"pocket-doc/internal/model"
 	"fmt"
 	"io"
 	"strings"
@@ -248,7 +248,7 @@ func (e *Exporter) writeDocument(zw *zip.Writer, schema *model.Schema) error {
 	// Footer
 	body.WriteString(e.paragraph("", "Normal"))
 	body.WriteString(e.paragraph("──────────────────────────────────────", "Normal"))
-	body.WriteString(e.paragraph("생성: DBMS-to-Document Tool", "Normal"))
+	body.WriteString(e.paragraph("생성: pocket-doc Tool", "Normal"))
 
 	content := fmt.Sprintf(`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">

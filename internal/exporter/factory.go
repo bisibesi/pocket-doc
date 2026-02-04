@@ -1,9 +1,9 @@
-package exporter
+﻿package exporter
 
 import (
-	"dbms-to-document/internal/exporter/docx"
-	"dbms-to-document/internal/exporter/html"
-	"dbms-to-document/internal/exporter/xlsx"
+	"pocket-doc/internal/exporter/docx"
+	"pocket-doc/internal/exporter/html"
+	"pocket-doc/internal/exporter/xlsx"
 	"fmt"
 	"strings"
 )

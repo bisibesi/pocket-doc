@@ -1,12 +1,12 @@
-package extractor
+﻿package extractor
 
 import (
 	"context"
-	"dbms-to-document/internal/extractor/mssql"
-	"dbms-to-document/internal/extractor/mysql"
-	"dbms-to-document/internal/extractor/oracle"
-	"dbms-to-document/internal/extractor/postgres"
-	"dbms-to-document/internal/model"
+	"pocket-doc/internal/extractor/mssql"
+	"pocket-doc/internal/extractor/mysql"
+	"pocket-doc/internal/extractor/oracle"
+	"pocket-doc/internal/extractor/postgres"
+	"pocket-doc/internal/model"
 	"fmt"
 	"strings"
 )
