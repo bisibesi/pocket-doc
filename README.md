@@ -213,39 +213,6 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 ---
 
-## 🎯 Roadmap
-
-### Phase 1: Architecture ✅ **COMPLETE**
-- [x] Define security-first data models
-- [x] Create extractor interface
-- [x] Viper-compatible configuration
-- [x] Automated validation
-
-### Phase 2: Core Implementation 🚧 **IN PROGRESS**
-- [ ] Oracle extractor
-- [ ] PostgreSQL extractor
-- [ ] Markdown template engine
-- [ ] CLI application
-
-### Phase 3: Advanced Features 📋 **PLANNED**
-- [ ] HTML/PDF generation
-- [ ] ERD diagram generation
-- [ ] MySQL/SQLServer extractors
-- [ ] Custom templates
-- [ ] Multi-language support
-
----
-
-## 💡 Use Cases
-
-- 📖 **Onboarding:** Help new developers understand database structure
-- 🔍 **Compliance:** Generate audit-ready documentation
-- 🤝 **External Sharing:** Share schema safely with partners/clients
-- 📚 **Knowledge Base:** Maintain up-to-date database documentation
-- 🔄 **Version Control:** Track schema changes over time
-
----
-
 ## ⚡ Performance
 
 - **Lightweight:** < 10MB binary
@@ -265,3 +232,4 @@ MIT License - see [LICENSE](LICENSE) file for details.
 **Built with ❤️ and Go**
 
 *Secure your code. Document your schema.*
+
