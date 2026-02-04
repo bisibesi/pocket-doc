@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ .DatabaseName }} - Schema Documentation</title>
+    <style>
+        /* ========================================
+           Critical Rule #2: Korean Font Support
+           ======================================== */
+        * {
+            font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', 'Noto Sans KR', 
+                         -apple-system, BlinkMacSystemFont, 'Segoe UI', 
+                         Arial, sans-serif;
+        }
+
+        /* ========================================
+           Screen Layout (Sidebar + Main)
+           ======================================== */
+        body {
+            margin: 0;
+            padding: 0;
+            background: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+
+        /* Sidebar Navigation (Tree) */
+        .sidebar {
+            width: 280px;
+            background: #2c3e50;
+            color: white;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .sidebar h2 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #ecf0f1;
+        }
+
+        .sidebar .tree-item {
+            padding: 8px 12px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-bottom: 4px;
+            transition: background 0.2s;
+        }
+
+        .sidebar .tree-item:hover {
+            background: #34495e;
+        }
+
+        .sidebar .tree-item.active {
+            background: #3498db;
+        }
+
+        .sidebar .tree-category {
+            font-weight: bold;
+            margin-top: 15px;
+            color: #95a5a6;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        /* Top Bar (Export Buttons) */
+        .top-bar {
+            background: white;
+            border-bottom: 2px solid #e0e0e0;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .top-bar h1 {
+            margin: 0;
+            font-size: 24px;
+            color: #2c3e50;
+        }
+
+        .export-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-excel {
+            background: #217346;
+            color: white;
+        }
+
+        .btn-excel:hover {
+            background: #1a5a37;
+        }
+
+        .btn-word {
+            background: #2b579a;
+            color: white;
+        }
+
+        .btn-word:hover {
+            background: #1f4278;
+        }
+
+        .btn-print {
+            background: #607d8b;
+            color: white;
+        }
+
+        .btn-print:hover {
+            background: #455a64;
+        }
+
+        /* Main Content Area (Grid) */
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px;
+        }
+
+        /* Content Sections */
+        .section {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .section h2 {
+            margin-top: 0;
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+
+        .section h3 {
+            color: #34495e;
+            margin-top: 25px;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            background: white;
+        }
+
+        table th {
+            background: #34495e;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        table tr:hover {
+            background: #f8f9fa;
+        }
+
+        table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 3px;
+            font-size: 11px;
+            font-weight: bold;
+            margin-right: 5px;
+        }
+
+        .badge-pk {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .badge-fk {
+            background: #3498db;
+            color: white;
+        }
+
+        .badge-uk {
+            background: #9b59b6;
+            color: white;
+        }
+
+        .badge-nullable {
+            background: #95a5a6;
+            color: white;
+        }
+
+        /* ========================================
+           Critical Rule #3: Print Styles
+           ======================================== */
+        @media print {
+            /* Hide screen-only elements */
+            .sidebar,
+            .top-bar,
+            .export-buttons {
+                display: none !important;
+            }
+
+            body {
+                background: white;
+                margin: 0;
+                padding: 0;
+            }
+
+            .container {
+                display: block;
+                height: auto;
+            }
+
+            .main {
+                overflow: visible;
+            }
+
+            .content {
+                padding: 0;
+                overflow: visible;
+            }
+
+            /* Paper-like layout */
+            @page {
+                size: A4;
+                margin: 2cm;
+            }
+
+            /* Critical Rule #3a: Page breaks for headings */
+            h1, h2 {
+                page-break-before: always;
+            }
+
+            /* First h1 should not break */
+            h1:first-of-type, h2:first-of-type {
+                page-break-before: avoid;
+            }
+
+            h3, h4 {
+                page-break-after: avoid;
+            }
+
+            /* Critical Rule #3b: Avoid breaking tables */
+            table {
+                page-break-inside: avoid;
+            }
+
+            /* Keep table rows together */
+            tr {
+                page-break-inside: avoid;
+            }
+
+            .section {
+                box-shadow: none;
+                border-radius: 0;
+                margin-bottom: 20px;
+                page-break-inside: avoid;
+            }
+
+            /* Ensure readability */
+            body {
+                font-size: 11pt;
+                line-height: 1.4;
+            }
+
+            table {
+                font-size: 10pt;
+            }
+
+            table th {
+                background: #d9d9d9 !important;
+                color: black !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            /* Show URLs for links */
+            a[href]:after {
+                content: " (" attr(href) ")";
+                font-size: 90%;
+                color: #666;
+            }
+        }
+
+        /* ========================================
+           Responsive Design (Screen)
+           ======================================== */
+        @media screen and (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                max-height: 200px;
+            }
+
+            .content {
+                padding: 15px;
+            }
+
+            .top-bar {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar Tree Navigation -->
+        <div class="sidebar">
+            <h2>📋 Schema Navigation</h2>
+            
+            <div class="tree-category">Overview</div>
+            <div class="tree-item" onclick="scrollToSection('overview')">
+                📊 Database Information
+            </div>
+
+            <div class="tree-category">Tables ({{ len .Tables }})</div>
+            {{ range .Tables }}
+            <div class="tree-item" onclick="scrollToSection('table-{{ .Name }}')">
+                📁 {{ .Name }}
+            </div>
+            {{ end }}
+
+            <div class="tree-category">Views ({{ len .Views }})</div>
+            {{ range .Views }}
+            <div class="tree-item" onclick="scrollToSection('view-{{ .Name }}')">
+                👁️ {{ .Name }}
+            </div>
+            {{ end }}
+
+            <div class="tree-category">Routines ({{ len .Routines }})</div>
+            {{ range .Routines }}
+            <div class="tree-item" onclick="scrollToSection('routine-{{ .Name }}')">
+                ⚙️ {{ .Name }}
+            </div>
+            {{ end }}
+
+            <div class="tree-category">Other Objects</div>
+            <div class="tree-item" onclick="scrollToSection('sequences')">
+                🔢 Sequences ({{ len .Sequences }})
+            </div>
+            <div class="tree-item" onclick="scrollToSection('triggers')">
+                ⚡ Triggers ({{ len .Triggers }})
+            </div>
+            <div class="tree-item" onclick="scrollToSection('synonyms')">
+                🔗 Synonyms ({{ len .Synonyms }})
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main">
+            <!-- Top Bar with Export Buttons -->
+            <div class="top-bar">
+                <h1>{{ .DatabaseName }} - Schema Documentation</h1>
+                <div class="export-buttons">
+                    <a href="/export/excel" class="btn btn-excel">📊 Export to Excel</a>
+                    <a href="/export/word" class="btn btn-word">📄 Export to Word</a>
+                    <button onclick="window.print()" class="btn btn-print">🖨️ Print</button>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="content">
+                <!-- Overview Section -->
+                <div id="overview" class="section">
+                    <h2>Database Overview</h2>
+                    <table>
+                        <tr>
+                            <th>Item</th>
+                            <th>Value</th>
+                        </tr>
+                        <tr><td>Database Name</td><td>{{ .DatabaseName }}</td></tr>
+                        <tr><td>Database Type</td><td>{{ .DatabaseType }}</td></tr>
+                        <tr><td>Version</td><td>{{ .Version }}</td></tr>
+                        <tr><td>Extracted At</td><td>{{ .ExtractedAt }}</td></tr>
+                        <tr><td>Total Tables</td><td>{{ len .Tables }}</td></tr>
+                        <tr><td>Total Views</td><td>{{ len .Views }}</td></tr>
+                        <tr><td>Total Routines</td><td>{{ len .Routines }}</td></tr>
+                        <tr><td>Total Sequences</td><td>{{ len .Sequences }}</td></tr>
+                        <tr><td>Total Triggers</td><td>{{ len .Triggers }}</td></tr>
+                        <tr><td>Total Synonyms</td><td>{{ len .Synonyms }}</td></tr>
+                    </table>
+                </div>
+
+                <!-- Tables Section -->
+                {{ range .Tables }}
+                <div id="table-{{ .Name }}" class="section">
+                    <h2>Table: {{ .Name }}</h2>
+                    <p><strong>Owner:</strong> {{ .Owner }} | <strong>Type:</strong> {{ .Type }} | <strong>Rows:</strong> {{ .RowCount }}</p>
+                    {{ if .Comment }}<p><strong>Comment:</strong> {{ .Comment }}</p>{{ end }}
+
+                    <h3>Columns</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Data Type</th>
+                                <th>Constraints</th>
+                                <th>Default</th>
+                                <th>Comment</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{ range .Columns }}
+                            <tr>
+                                <td>{{ .Name }}</td>
+                                <td>{{ .DataType }}</td>
+                                <td>
+                                    {{ if .IsPrimaryKey }}<span class="badge badge-pk">PK</span>{{ end }}
+                                    {{ if .IsForeignKey }}<span class="badge badge-fk">FK</span>{{ end }}
+                                    {{ if .IsUnique }}<span class="badge badge-uk">UK</span>{{ end }}
+                                    {{ if .Nullable }}<span class="badge badge-nullable">NULL</span>{{ end }}
+                                </td>
+                                <td>{{ .DefaultValue }}</td>
+                                <td>{{ .Comment }}</td>
+                            </tr>
+                            {{ end }}
+                        </tbody>
+                    </table>
+
+                    {{ if .Indexes }}
+                    <h3>Indexes</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Type</th>
+                                <th>Unique</th>
+                                <th>Columns</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{ range .Indexes }}
+                            <tr>
+                                <td>{{ .Name }}</td>
+                                <td>{{ .Type }}</td>
+                                <td>{{ if .IsUnique }}✓{{ else }}✗{{ end }}</td>
+                                <td>{{ join .Columns ", " }}</td>
+                            </tr>
+                            {{ end }}
+                        </tbody>
+                    </table>
+                    {{ end }}
+                </div>
+                {{ end }}
+
+                <!-- Routines Section (SECURITY: Signature only, NO body!) -->
+                {{ range .Routines }}
+                <div id="routine-{{ .Name }}" class="section">
+                    <h2>{{ .Type }}: {{ .Name }}</h2>
+                    <p><strong>Owner:</strong> {{ .Owner }}</p>
+                    <p><strong>Signature:</strong> <code>{{ .Signature }}</code></p>
+                    {{ if .ReturnType }}<p><strong>Return Type:</strong> {{ .ReturnType }}</p>{{ end }}
+                    {{ if .Comment }}<p><strong>Comment:</strong> {{ .Comment }}</p>{{ end }}
+
+                    {{ if .Arguments }}
+                    <h3>Parameters</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Mode</th>
+                                <th>Data Type</th>
+                                <th>Default</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{ range .Arguments }}
+                            <tr>
+                                <td>{{ .Name }}</td>
+                                <td>{{ .Mode }}</td>
+                                <td>{{ .DataType }}</td>
+                                <td>{{ .DefaultValue }}</td>
+                            </tr>
+                            {{ end }}
+                        </tbody>
+                    </table>
+                    {{ end }}
+                </div>
+                {{ end }}
+
+                <!-- Other Objects -->
+                {{ if .Sequences }}
+                <div id="sequences" class="section">
+                    <h2>Sequences</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Min</th>
+                                <th>Max</th>
+                                <th>Increment</th>
+                                <th>Current</th>
+                                <th>Comment</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{ range .Sequences }}
+                            <tr>
+                                <td>{{ .Name }}</td>
+                                <td>{{ .MinValue }}</td>
+                                <td>{{ .MaxValue }}</td>
+                                <td>{{ .Increment }}</td>
+                                <td>{{ .LastNumber }}</td>
+                                <td>{{ .Comment }}</td>
+                            </tr>
+                            {{ end }}
+                        </tbody>
+                    </table>
+                </div>
+                {{ end }}
+
+                {{ if .Triggers }}
+                <div id="triggers" class="section">
+                    <h2>Triggers</h2>
+                    <p><em>Note: Trigger definitions are excluded for security reasons.</em></p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Table</th>
+                                <th>Timing</th>
+                                <th>Event</th>
+                                <th>Status</th>
+                                <th>Comment</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{ range .Triggers }}
+                            <tr>
+                                <td>{{ .Name }}</td>
+                                <td>{{ .TargetTable }}</td>
+                                <td>{{ .Timing }}</td>
+                                <td>{{ .Event }}</td>
+                                <td>{{ .Status }}</td>
+                                <td>{{ .Comment }}</td>
+                            </tr>
+                            {{ end }}
+                        </tbody>
+                    </table>
+                </div>
+                {{ end }}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function scrollToSection(id) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                
+                // Highlight active item
+                document.querySelectorAll('.tree-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                event.target.classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>
